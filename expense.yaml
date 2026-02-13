@@ -17,10 +17,10 @@
         name: "{{ item }}-{{ env }}"
       loop: "{{ instances }}"
       tags:
-          Environment: development
-          Project: Expense
-          name: "{{ item }}-{{ env }}"
-          register: ec2-output
+        Environment: development
+        Project: Expense
+        name: "{{ item }}-{{ env }}"
+        register: ec2-output
         
     - name: ec2 out print
       ansible.builtin.debug:
