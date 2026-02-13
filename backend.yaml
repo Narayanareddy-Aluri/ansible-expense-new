@@ -5,7 +5,9 @@
   - name: enable node js
     ansible.builtin.command: dnf module enable nodejs:20 -y
   - name: installing node js 
-    ansible.builtin.command: dnf install nodejs -y
+    ansible.builtin.package:
+      name: nodejs
+      state: present
     register: nodejs_output
   - name: print output of nodejs_output
     debug:
