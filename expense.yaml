@@ -1,6 +1,6 @@
 - name: create ec2 instance and R53 
   hosts: local
-  connections: local
+  connection: local
   vars:
   instance:
   - backend
