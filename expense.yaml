@@ -2,11 +2,11 @@
   hosts: local
   connection: local
   vars:
-  instances:
-  - backend
-  - frontend
-  - mysql
-  env: Dev
+   instance:
+    - backend
+    - frontend
+    - mysql
+   env: Dev
 
   tasks:
     - name: create EC2
