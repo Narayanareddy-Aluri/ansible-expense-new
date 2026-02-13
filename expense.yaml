@@ -3,9 +3,9 @@
   connection: local
   vars:
    instances:
-    - backend
-    - frontend
-    - mysql
+   - backend
+   - frontend
+   - mysql
    env: Dev
 
   tasks:
