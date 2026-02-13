@@ -3,10 +3,11 @@
   connection: local
   vars:
    instances:
-    - backend
-    - frontend
-    - mysql
+   - backend
+   - frontend
+   - mysql
    env: Dev
+   action: create
 
   tasks:
     - name: create EC2
@@ -18,7 +19,7 @@
         tags:
           Environment: development
           Project: Expense
-          name: "{{ item }}-{{ env }}"
+          Name: "{{ item }}-{{ env }}"
       loop: "{{ instances }}"
       register: ec2_output
 
@@ -27,4 +28,10 @@
         msg: "{{ ec2_output }}"
 
 
-        
+    - name: delete ec2 instance
+      amazon.aws.ec2_instance:
+      state: absent
+      name: "{{ item }}-{{ env }}"
+      wait: false
+      loop: "{{ instances }}"
+      when: action == "destroy"
