@@ -3,9 +3,9 @@
   connection: local
   vars:
    instances:
-   - backend
-   - frontend
-   - mysql
+    - backend
+    - frontend
+    - mysql
    env: Dev
 
   tasks:
@@ -14,14 +14,13 @@
         instance_type: "t3.micro"
         security_group: "sg-038949a8e5b397184"
         image_id: "ami-0220d79f3f480ecf5"
-        name: "{{ 'item' }}-{{ 'env' }}"
+        name: "{{ item }}-{{ env }}"
+        tags:
+          Environment: development
+          Project: Expense
+          name: "{{ item }}-{{ env }}"
       loop: "{{ instances }}"
-      tags:
-        Environment: development
-        Project: Expense
-        name: "{{ 'item' }}-{{ 'env' }}"
-        register: ec2-output
-        
+      register: ec2-output
     - name: ec2 out print
       ansible.builtin.debug:
         msg: "{{ ec2-output }}"
