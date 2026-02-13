@@ -1,5 +1,5 @@
 - name: create ec2 instance and R53 
-  hosts: local
+  hosts: all
   connection: local
   vars:
    instance:
@@ -17,7 +17,7 @@
         name: "{{ item }}-{{ env }}"
       loop: "{{ instances }}"
       tags:
-        - Environment: Dev
+          Environment: "{{ env }}"
           Project: Expense
           name: "{{ item }}-{{ env }}"
           register: ec2-output
