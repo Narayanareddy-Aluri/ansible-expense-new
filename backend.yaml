@@ -1,5 +1,6 @@
 - name: creating backend
   hosts: backend
+  become: yes
   tasks:
   - name: installing node js
     ansible.builtin.command: dnf install nodejs:20 -y 
