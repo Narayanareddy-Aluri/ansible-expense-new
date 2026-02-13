@@ -3,7 +3,8 @@
   become: yes
   tasks:
   - name: installing node js
-    ansible.builtin.command: dnf install nodejs:20 -y 
+    ansible.builtin.command: dnf module enable nodejs:20 -y
+    ansible.builtin.command: dnf install nodejs -y
     register: nodejs_output
   - name: print output of nodejs_output
     debug:
@@ -13,5 +14,4 @@
     debug: 
       msg: "node js installed success"
     
-
      
