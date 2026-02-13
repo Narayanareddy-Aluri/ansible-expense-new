@@ -2,7 +2,7 @@
   hosts: local
   connection: local
   vars:
-  instance:
+  instances:
   - backend
   - frontend
   - mysql
@@ -15,7 +15,7 @@
         security_group: "sg-038949a8e5b397184"
         image_id: "ami-0220d79f3f480ecf5"
         name: "{{ item }}-{{ env }}"
-      loop: "{{ instance }}"
+      loop: "{{ instances }}"
       tags:
           Environment: Dev
           Project: Expense
