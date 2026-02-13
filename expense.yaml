@@ -8,6 +8,7 @@
    - mysql
    env: Dev
    action: create
+   DOMAIN_NAME: narayanareddy.online
 
   tasks:
     - name: create EC2
@@ -27,6 +28,17 @@
       ansible.builtin.debug:
         msg: "{{ ec2_output }}"
 
+    - name: create R53 records
+      amazon.aws.route53:
+        state: present
+        zone: "{{ DOMAIN_NAME }}"
+        record: "{{ item.item }}-{{ env }}.{{ DOMAIN_NAME }}"  #backend-dev.narayanareddy.online
+        type: A
+        ttl: 1
+        value: "{{ item.instances[0].private_ip_address }}"
+        wait: true
+      loop: "{{ ec2_output.results }}"
+          
     - name: delete ec2 instance
       amazon.aws.ec2_instance:
        state: absent
