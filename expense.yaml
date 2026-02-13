@@ -1,0 +1,22 @@
+- name: create ec2 instance and R53 
+  hosts: local
+  connections: local
+  vars:
+  instance:
+  - backend
+  - frontend
+  - mysql
+  env: Dev
+
+  tasks:
+    - name: create EC2
+      amazon.aws.ec2_instance:
+        instance_type: "t3.micro"
+        security_group: "sg-038949a8e5b397184"
+        image_id: "ami-0220d79f3f480ecf5"
+        name: "{{ item }}-{{ env }}"
+      loop: "{{ instance }}"
+      tags:
+          Environment: Dev
+          Project: Expense
+          name: "{{ item }}-{{ env }}"
