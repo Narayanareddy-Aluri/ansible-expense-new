@@ -2,7 +2,7 @@
   hosts: all
   connection: local
   vars:
-   instance:
+   instances:
     - backend
     - frontend
     - mysql
