@@ -1,0 +1,16 @@
+- name: creating backend
+  hosts: backend
+  tasks:
+  - name: installing node js
+    ansible.builtin.command: dnf install nodejs:20 -y 
+    register: nodejs_output
+  - name: print output of nodejs_output
+    debug:
+      msg: "{{ nodejs_output }}"
+    when: nodejs_output.rc == 0
+  - name: status of nodejs
+    debug: 
+      msg: "node js installed success"
+    
+
+     
