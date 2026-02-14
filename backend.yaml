@@ -6,8 +6,7 @@
     schema_path: "/app/schema/backend.sql"
     mysql_user: "expense"
     mysql_password: "ExpenseApp@1"
-    mysql_host=mysql-dev.narayanareddy.online
-
+    
   tasks:
   - name: enable node js
     ansible.builtin.command: dnf module enable nodejs:20 -y
@@ -65,12 +64,12 @@
     community.mysql.mysql_db:
       name: "{{ db_name }}"
       state: present
-      login_host: "{{ MYSQL_HOST }}"
+      login_host: "{{ mysql_host }}"
       login_user: "{{ mysql_user }}"
       login_password: "{{ mysql_password }}"
   - name: Check if transactions table exists
     community.mysql.mysql_query:
-      login_host: "{{ MYSQL_HOST }}"
+      login_host: "{{ mysql_host }}"
       login_user: "{{ mysql_user }}"
       login_password: "{{ mysql_password }}"
       login_db: "{{ db_name }}"
@@ -83,7 +82,7 @@
       name: "{{ db_name }}"
       state: import
       target: "{{ schema_path }}"
-      login_host: "{{ MYSQL_HOST }}"
+      login_host: "{{ mysql_host }}"
       login_user: "{{ mysql_user }}"
       login_password: "{{ mysql_password }}"
     when: schema_check.query_result | length == 0
