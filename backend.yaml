@@ -6,6 +6,7 @@
     schema_path: "/app/schema/backend.sql"
     mysql_user: "expense"
     mysql_password: "ExpenseApp@1"
+    mysql_host=mysql-dev.narayanareddy.online
 
   tasks:
   - name: enable node js
