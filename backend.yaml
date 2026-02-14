@@ -71,7 +71,7 @@
       login_host: "{{ MYSQL_HOST }}"
       login_user: "{{ mysql_user }}"
       login_password: "{{ mysql_password }}"
-      db: "{{ db_name }}"
+      login_db: "{{ db_name }}"
       query: "SHOW TABLES LIKE 'transactions';"
     register: schema_check
 
