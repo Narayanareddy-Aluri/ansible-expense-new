@@ -89,6 +89,7 @@
   - name: load and enable service
     ansible.builtin.systemd:
       name: backend
+      masked: no
       daemon_reload: yes
       enabled: yes
       state: started
