@@ -1,6 +1,9 @@
 - name: creating backend
   hosts: backend
   become: yes
+  vars:
+    db_name: "expense"
+    schema_path: "/app/schema/backend.sql"
   tasks:
   - name: enable node js
     ansible.builtin.command: dnf module enable nodejs:20 -y
@@ -16,5 +19,94 @@
   - name: status of nodejs
     debug: 
       msg: "node js installed success"
-    
-     
+  - name: useradd
+    ansible.builtin.user:
+    name: expense
+  - name: create app directory
+    ansible.builtin.file:
+      path: /app
+      state: directory
+      mode: '0755'
+  - name: download app code
+    ansible.builtin.get_url:
+      url: https://expense-joindevops.s3.us-east-1.amazonaws.com/expense-backend-v2.zip
+      dest: /tmp/backend.zip
+  - name: unzip expense
+    ansible.builtin.unarchive:
+      src: /tmp/backend.zip
+      dest: /app
+      remote_src: yes
+ 
+  - name: downloading dependencies
+    community.general.npm:
+      path: /app
+      state: present
+  - name: Setup SystemD Expense Backend Service
+    ansible.builtin.copy:
+      src: backend.service
+      dest: /etc/systemd/system/backend.service
+
+  - name: Install MySQL client
+    ansible.builtin.dnf:
+        name: mysql
+        state: present
+  - name: Ensure expense database exists
+    community.mysql.mysql_db:
+        name: "{{ db_name }}"
+        state: present
+        login_host: "{{ MYSQL_HOST }}"
+        login_user: "{{ mysql_user }}"
+        login_password: "{{ mysql_password }}"
+  - name: Check if transactions table exists
+    community.mysql.mysql_query:
+        login_host: "{{ MYSQL_HOST }}"
+        login_user: "{{ mysql_user }}"
+        login_password: "{{ mysql_password }}"
+        db: "{{ db_name }}"
+        query: "SHOW TABLES LIKE 'transactions';"
+    register: schema_check
+
+    # ✅ Import schema only if table does not exist
+  - name: Import backend schema
+    community.mysql.mysql_db:
+        name: "{{ db_name }}"
+        state: import
+        target: "{{ schema_path }}"
+        login_host: "{{ MYSQL_HOST }}"
+        login_user: "{{ mysql_user }}"
+        login_password: "{{ mysql_password }}"
+    when: schema_check.query_result | length == 0
+
+  - name: load and enable service
+    ansible.builtin.systemd:
+      name: backend
+      daemon_reload: yes
+      enabled: yes
+      state: started
+
+  
+
+  # - name: Install MySQL client
+  #   ansible.builtin.dnf:
+  #     name: mysql
+  #     state: present
+
+  # - name: Check if transactions table exists
+  #   ansible.builtin.command: >
+  #     mysql -h {{ MYSQL_HOST }} -u{{ mysql_user }} -p{{ mysql_password }}
+  #     -e "use expense; show tables like 'transactions';"
+  #   register: schema_check
+  #   ignore_errors: yes
+
+  # - name: Print schema check output
+  #   ansible.builtin.debug:
+  #     msg: "{{ schema_check.stdout }}"
+
+  # - name: Load backend schema if not exists
+  #   ansible.builtin.command: >
+  #     mysql -h {{ MYSQL_HOST }} -u{{ mysql_user }} -p{{ mysql_password }}
+  #     expense < /app/schema/backend.sql
+  #   when: schema_check.stdout == ""
+  
+  
+  
