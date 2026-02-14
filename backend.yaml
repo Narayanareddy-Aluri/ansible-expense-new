@@ -5,7 +5,7 @@
     db_name: "expense"
     schema_path: "/app/schema/backend.sql"
     mysql_user: "root"
-    mysql_password: "ExpenseApp@1"
+    mysql_password: "pExpenseApp@1"
   tasks:
   - name: enable node js
     ansible.builtin.command: dnf module enable nodejs:20 -y
