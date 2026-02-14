@@ -54,9 +54,11 @@
       state: present
   - name: Install PyMySQL dependency
     ansible.builtin.pip:
-      name: PyMySQL
+      name:
+      - PyMySQL
+      - cryptography
       executable: pip3
-      
+
   - name: Ensure expense database exists
     community.mysql.mysql_db:
       name: "{{ db_name }}"
